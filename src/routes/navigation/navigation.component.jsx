@@ -8,10 +8,11 @@ import { signOutUser } from "../../utils/firebase/firebase.utils";
 import './navigation.styles.scss'
 
 const Navigation = () => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  // const { currentUser, setCurrentUser } = useContext(UserContext); // no longer need to hook onto the context because of the authStateChangeListener
+  const { currentUser } = useContext(UserContext);
   const signOutHandler = async () => {
    await signOutUser();
-    setCurrentUser(null)
+    // setCurrentUser(null) // no longer needed because we have the authListener
   }
   return (
     <Fragment>
