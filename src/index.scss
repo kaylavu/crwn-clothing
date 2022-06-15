@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 20px 40px;
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -16,6 +17,5 @@ a {
 }
 
 * {
-  // padding and border will no longer count in the width of the element
   box-sizing: border-box;
 }
