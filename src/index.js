@@ -13,7 +13,6 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
     <UserProvider>
-      {/* The products are able to reach up into userProvider and get the user data */}
       <ProductsProvider>
       <CartProvider>
         <App />
