@@ -5,8 +5,27 @@ import Navigation from './routes/navigation/navigation.component';
 import Authentication from './routes/authentication/authentication.component';
 import Shop from './routes/shop/shop.component';
 import Checkout from './routes/checkout/checkout.component';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import {
+  createUserDocumentFromAuth,
+  onAuthStateChangeListener,
+} from './utils/firebase/firebase.utils';
+import { setCurrentUser } from './store/user/user.action';
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangeListener((user) => {
+      if (user) {
+        createUserDocumentFromAuth(user);
+      }
+      dispatch(setCurrentUser(user));
+    });
+    return unsubscribe;
+  }, [dispatch]); //dispatch is not going to change. added to remove eslint error.
+
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>
@@ -17,6 +36,6 @@ function App() {
       </Route>
     </Routes>
   );
-}
+};
 
 export default App;
