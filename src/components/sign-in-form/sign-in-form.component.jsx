@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import {
-  signInWithGooglePopup,
-  singInAuthUserWithEmailAndPassword,
-} from '../../utils/firebase/firebase.utils';
-import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
-import FormInput from '../form-input/form-input.component';
+import { useDispatch } from 'react-redux';
 
-import { ButtonsContainer, SignInContainer } from './sign-in-form.styles';
+import FormInput from '../form-input/form-input.component';
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
+
+import { SignInContainer, ButtonsContainer } from './sign-in-form.styles';
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from '../../store/user/user.action';
 
 const defaultFormFields = {
   email: '',
@@ -14,42 +16,33 @@ const defaultFormFields = {
 };
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormFields({ ...formFields, [name]: value });
-  };
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
-    //  await createUserDocumentFromAuth(user) // moved to UserContext
+    dispatch(googleSignInStart());
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      await singInAuthUserWithEmailAndPassword(email, password);
+      dispatch(emailSignInStart(email, password));
       resetFormFields();
     } catch (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          alert('incorrect password for email');
-          //Break once you find a case so don't bother checking other cases.
-          break;
-        case 'auth/user-not-found':
-          alert('User not found');
-          break;
-        default:
-          console.log(error);
-      }
-      console.log('error', error);
+      console.log('user sign in failed', error);
     }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormFields({ ...formFields, [name]: value });
   };
 
   return (
